@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Paneer Butter Masala",
+    "description": "Soft paneer cubes cooked in creamy tomato gravy with butter and spices.",
+    "price": 220,
+    "category": "North Indian",
+    "image": "https://res.cloudinary.com/demo/image/upload/v1720000000/paneer_butter_masala.jpg"
+  },
+  {
+    "name": "Veg Biryani",
+    "description": "Aromatic basmati rice cooked with mixed vegetables and fragrant spices.",
+    "price": 180,
+    "category": "Rice",
+    "image": "https://res.cloudinary.com/demo/image/upload/v1720000000/veg_biryani.jpg"
+  },
+  {
+    "name": "Masala Dosa",
+    "description": "Crispy rice crepe filled with spiced potato masala served with chutney and sambar.",
+    "price": 120,
+    "category": "South Indian",
+    "image": "https://res.cloudinary.com/demo/image/upload/v1720000000/masala_dosa.jpg"
+  },
+  {
+    "name": "Chole Bhature",
+    "description": "Spicy chickpeas curry served with fluffy fried bhature.",
+    "price": 150,
+    "category": "North Indian",
+    "image": "https://res.cloudinary.com/demo/image/upload/v1720000000/chole_bhature.jpg"
+  },
+  {
+    "name": "Veg Momos",
+    "description": "Steamed dumplings stuffed with spiced vegetables served with red chutney.",
+    "price": 90,
+    "category": "Snacks",
+    "image": "https://res.cloudinary.com/demo/image/upload/v1720000000/veg_momos.jpg"
+  },
+  {
+    "name": "Margherita Pizza",
+    "description": "Classic cheese pizza topped with mozzarella and fresh basil.",
+    "price": 250,
+    "category": "Italian",
+    "image": "https://res.cloudinary.com/demo/image/upload/v1720000000/margherita_pizza.jpg"
+  },
+  {
+    "name": "Hakka Noodles",
+    "description": "Stir-fried noodles tossed with vegetables and soy sauce.",
+    "price": 160,
+    "category": "Chinese",
+    "image": "https://res.cloudinary.com/demo/image/upload/v1720000000/hakka_noodles.jpg"
+  },
+  {
+    "name": "Spring Rolls",
+    "description": "Crispy fried rolls stuffed with spiced vegetables.",
+    "price": 100,
+    "category": "Chinese",
+    "image": "https://res.cloudinary.com/demo/image/upload/v1720000000/spring_rolls.jpg"
+  },
+  {
+    "name": "Rajma Chawal",
+    "description": "Red kidney beans curry served with steamed basmati rice.",
+    "price": 130,
+    "category": "North Indian",
+    "image": "https://res.cloudinary.com/demo/image/upload/v1720000000/rajma_chawal.jpg"
+  },
+  {
+    "name": "Aloo Paratha",
+    "description": "Stuffed flatbread filled with spiced mashed potatoes served with curd and pickle.",
+    "price": 80,
+    "category": "Breakfast",
+    "image": "https://res.cloudinary.com/demo/image/upload/v1720000000/aloo_paratha.jpg"
+  }
+]
