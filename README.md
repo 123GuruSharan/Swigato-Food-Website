@@ -26,20 +26,6 @@ This repository hosts the source code for SWIGATO, a dynamic food ordering websi
 - Role-Based Identification
 - Beautiful Alerts
 
-## Screenshots
-
-![Hero](https://i.ibb.co/59cwY75/food-hero.png)
-- Hero Section
-
-![Products](https://i.ibb.co/JnNQPyQ/food-products.png)
-- Products Section
-
-![Cart](https://i.ibb.co/t2LrQ8p/food-cart.png)
-- Cart Page
-
-![Login](https://i.ibb.co/s6PgwkZ/food-login.png)
-- Login Popup
-
 ## Run Locally
 
 Clone the project
