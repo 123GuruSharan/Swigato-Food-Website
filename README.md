@@ -5,7 +5,6 @@ This repository hosts the source code for SWIGATO, a dynamic food ordering websi
 ## Demo
 
 - User Panel: [https://food-delivery-frontend-s2l9.onrender.com/](https://swigato-food-website.vercel.app/)
-- Admin Panel: [https://food-delivery-admin-wrme.onrender.com/](https://food-delivery-admin-wrme.onrender.com/)
 
 ## Features
 
