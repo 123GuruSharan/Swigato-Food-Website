@@ -1,14 +1,42 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { food_list as staticFoodList } from "../assets/frontend_assets/assets";
 
 export const StoreContext = createContext(null);
 
-const StoreContextProvider = (props) => {
+const StoreContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState({});
-  const url = "https://food-delivery-backend-5b6g.onrender.com";
-  const [token, setToken] = useState("");
-  const [food_list, setFoodList] = useState([]);
+  
+  // Use environment variable for backend URL
+  // On production (Vercel): Set VITE_API_URL in environment variables
+  // On local development: Falls back to localhost:4000
+  const url = (() => {
+    const envUrl = import.meta.env.VITE_API_URL;
+    if (envUrl) {
+      console.log("[StoreContext] Using backend URL from env:", envUrl);
+      return envUrl;
+    }
+    const fallbackUrl = "http://localhost:4000";
+    console.log("[StoreContext] Using fallback localhost URL:", fallbackUrl);
+    return fallbackUrl;
+  })();
+  
+  const [token, setToken] = useState(() => localStorage.getItem("token") || "");
+  const [food_list] = useState(staticFoodList);
+
+  useEffect(() => {
+    axios.defaults.baseURL = url;
+  }, [url]);
+
+  useEffect(() => {
+    if (token) {
+      axios.defaults.headers.common.token = token;
+      localStorage.setItem("token", token);
+      return;
+    }
+    delete axios.defaults.headers.common.token;
+  }, [token]);
 
   const addToCart = async (itemId) => {
     if (!cartItems[itemId]) {
@@ -16,32 +44,42 @@ const StoreContextProvider = (props) => {
     } else {
       setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
     }
-    if (token) {
-      const response=await axios.post(
-        url + "/api/cart/add",
-        { itemId },
-        { headers: { token } }
-      );
-      if(response.data.success){
-        toast.success("item Added to Cart")
-      }else{
-        toast.error("Something went wrong")
+    const authToken = localStorage.getItem("token");
+    if (authToken) {
+      try {
+        const response = await axios.post(
+          url + "/api/cart/add",
+          { itemId },
+          { headers: { token: authToken } }
+        );
+        if (response.data.success) {
+          toast.success("Item added to cart");
+        } else {
+          toast.error("Something went wrong");
+        }
+      } catch (error) {
+        toast.error("Unable to add item right now");
       }
     }
   };
 
   const removeFromCart = async (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
-    if (token) {
-      const response= await axios.post(
-        url + "/api/cart/remove",
-        { itemId },
-        { headers: { token } }
-      );
-      if(response.data.success){
-        toast.success("item Removed from Cart")
-      }else{
-        toast.error("Something went wrong")
+    const authToken = localStorage.getItem("token");
+    if (authToken) {
+      try {
+        const response = await axios.post(
+          url + "/api/cart/remove",
+          { itemId },
+          { headers: { token: authToken } }
+        );
+        if (response.data.success) {
+          toast.success("Item removed from cart");
+        } else {
+          toast.error("Something went wrong");
+        }
+      } catch (error) {
+        toast.error("Unable to remove item right now");
       }
     }
   };
@@ -50,37 +88,34 @@ const StoreContextProvider = (props) => {
     let totalAmount = 0;
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
-        let itemInfo = food_list.find((product) => product._id === item);
-        totalAmount += itemInfo.price * cartItems[item];
+        const itemInfo = food_list.find((product) => product._id === item);
+        if (itemInfo) {
+          totalAmount += itemInfo.price * cartItems[item];
+        }
       }
     }
     return totalAmount;
   };
 
-  const fetchFoodList = async () => {
-    const response = await axios.get(url + "/api/food/list");
-    if (response.data.success) {
-      setFoodList(response.data.data);
-    } else {
-      alert("Error! Products are not fetching..");
+  const loadCartData = async (authToken) => {
+    try {
+      const response = await axios.post(
+        url + "/api/cart/get",
+        {},
+        { headers: { token: authToken } }
+      );
+      setCartItems(response.data.cartData || {});
+    } catch (error) {
+      setCartItems({});
     }
-  };
-
-  const loadCardData = async (token) => {
-    const response = await axios.post(
-      url + "/api/cart/get",
-      {},
-      { headers: { token } }
-    );
-    setCartItems(response.data.cartData);
   };
 
   useEffect(() => {
     async function loadData() {
-      await fetchFoodList();
-      if (localStorage.getItem("token")) {
-        setToken(localStorage.getItem("token"));
-        await loadCardData(localStorage.getItem("token"));
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        setToken(storedToken);
+        await loadCartData(storedToken);
       }
     }
     loadData();
@@ -99,7 +134,7 @@ const StoreContextProvider = (props) => {
   };
   return (
     <StoreContext.Provider value={contextValue}>
-      {props.children}
+      {children}
     </StoreContext.Provider>
   );
 };
