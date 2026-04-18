@@ -57,8 +57,10 @@ const Success = () => {
           {
             headers: { token },
           }
-        );\n
-        console.log("[Success] Verification response:", response.data);\n
+        );
+
+        console.log("[Success] Verification response:", response.data);
+
         if (response.data.success) {
           console.log("[Success] Payment verified successfully!");
           // Clear localStorage
