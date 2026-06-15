@@ -1,8 +1,7 @@
-import React from "react";
 import "./ExploreMenu.css";
 import { menu_list } from "../../assets/frontend_assets/assets";
 
-const ExploreMenu = ({category,setCategory}) => {
+const ExploreMenu = ({ category, setCategory }) => {
   return (
     <div className="explore-menu" id="explore-menu">
       <h1>Explore our menu</h1>
@@ -12,16 +11,32 @@ const ExploreMenu = ({category,setCategory}) => {
         one delicious meal at a time.
       </p>
       <div className="explore-menu-list">
+        <div
+          onClick={() => setCategory("All")}
+          className="explore-menu-list-item"
+        >
+          <div className={`all-category-chip ${category === "All" ? "active" : ""}`}>
+            All
+          </div>
+        </div>
         {menu_list.map((item, index) => {
           return (
-            <div onClick={()=>setCategory(prev=>prev===item.menu_image.name?"All":item.menu_name)} key={index} className="explore-menu-list-item">
-              <img className={category===item.menu_name?"active":""} src={item.menu_image} alt="" />
+            <div
+              onClick={() => setCategory(item.menu_name)}
+              key={index}
+              className="explore-menu-list-item"
+            >
+              <img
+                className={category === item.menu_name ? "active" : ""}
+                src={item.menu_image}
+                alt={item.menu_name}
+              />
               <p>{item.menu_name}</p>
             </div>
           );
         })}
       </div>
-      <hr/>
+      <hr />
     </div>
   );
 };

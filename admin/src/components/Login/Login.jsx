@@ -8,11 +8,12 @@ import {useNavigate } from "react-router-dom";
 
 const Login = ({ url }) => {
   const navigate=useNavigate();
-  const {admin,setAdmin,token, setToken } = useContext(StoreContext);
+  const { setAdmin, setToken } = useContext(StoreContext);
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+  const [submitting, setSubmitting] = useState(false);
   const onChangeHandler = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -20,13 +21,15 @@ const Login = ({ url }) => {
   };
   const onLogin = async (event) => {
     event.preventDefault();
+    setSubmitting(true);
+    try {
     const response = await axios.post(url + "/api/user/login", data);
     if (response.data.success) {
       if (response.data.role === "admin") {
         setToken(response.data.token);
         setAdmin(true);
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("admin", true);
+        localStorage.setItem("admin", "true");
         toast.success("Login Successfully");
         navigate("/add")
       }else{
@@ -35,12 +38,19 @@ const Login = ({ url }) => {
     } else {
       toast.error(response.data.message);
     }
-  };
-  useEffect(()=>{
-    if(admin && token){
-       navigate("/add");
+    } catch {
+      toast.error("Could not reach server");
+    } finally {
+      setSubmitting(false);
     }
-  },[])
+  };
+  useEffect(() => {
+    const t = localStorage.getItem("token");
+    const a = localStorage.getItem("admin") === "true";
+    if (t && a) {
+      navigate("/add", { replace: true });
+    }
+  }, [navigate]);
   return (
     <div className="login-popup">
       <form onSubmit={onLogin} className="login-popup-container">
@@ -65,7 +75,9 @@ const Login = ({ url }) => {
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" disabled={submitting}>
+          {submitting ? "Signing in…" : "Login"}
+        </button>
       </form>
     </div>
   );

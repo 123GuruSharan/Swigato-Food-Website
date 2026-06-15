@@ -33,6 +33,10 @@
 .place-order .cart-total button{
     margin-top: 30px;
 }
+.place-order .cart-total button:disabled{
+    opacity: 0.7;
+    cursor: not-allowed;
+}
 @media (max-width:800px) {
     .place-order{
         flex-direction: column;

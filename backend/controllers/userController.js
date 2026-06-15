@@ -17,7 +17,7 @@ const loginUser = async (req, res) => {
       return res.json({ success: false, message: "Invalid Credentials" });
     }
     const role=user.role;
-    const token = createToken(user._id);
+    const token = createToken(user._id, user.name, user.email);
     res.json({ success: true, token,role });
   } catch (error) {
     console.log(error);
@@ -27,8 +27,9 @@ const loginUser = async (req, res) => {
 
 // Create token
 
-const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET);
+const createToken = (id, name, email) => {
+  const jwtSecret = process.env.JWT_SECRET || "dev_jwt_secret_change_me";
+  return jwt.sign({ id, name, email }, jwtSecret);
 };
 
 // register user
@@ -55,7 +56,8 @@ const registerUser = async (req, res) => {
 
     // hashing user password
 
-    const salt = await bcrypt.genSalt(Number(process.env.SALT));
+    const saltRounds = Number(process.env.SALT || 10);
+    const salt = await bcrypt.genSalt(saltRounds);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new userModel({
@@ -66,7 +68,7 @@ const registerUser = async (req, res) => {
 
     const user = await newUser.save();
     const role=user.role;
-    const token = createToken(user._id);
+    const token = createToken(user._id, user.name, user.email);
     res.json({ success: true, token, role});
   } catch (error) {
     console.log(error);

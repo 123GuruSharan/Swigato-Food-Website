@@ -92,7 +92,7 @@ export const menu_list = [
         menu_image: menu_2
     },
     {
-        menu_name: "Deserts",
+        menu_name: "Desserts",
         menu_image: menu_3
     },
     {
@@ -116,7 +116,7 @@ export const menu_list = [
         menu_image: menu_8
     }]
 
-export const food_list = [
+const raw_food_list = [
     {
         _id: "1",
         name: "Greek salad",
@@ -180,28 +180,28 @@ export const food_list = [
         image: food_9,
         price: 14,
         description: "Food provides essential nutrients for overall health and well-being",
-        category: "Deserts"
+        category: "Desserts"
     }, {
         _id: "10",
         name: "Fruit Ice Cream",
         image: food_10,
         price: 22,
         description: "Food provides essential nutrients for overall health and well-being",
-        category: "Deserts"
+        category: "Desserts"
     }, {
         _id: "11",
         name: "Jar Ice Cream",
         image: food_11,
         price: 10,
         description: "Food provides essential nutrients for overall health and well-being",
-        category: "Deserts"
+        category: "Desserts"
     }, {
         _id: "12",
         name: "Vanilla Ice Cream",
         image: food_12,
         price: 12,
         description: "Food provides essential nutrients for overall health and well-being",
-        category: "Deserts"
+        category: "Desserts"
     },
     {
         _id: "13",
@@ -299,7 +299,7 @@ export const food_list = [
     },
     {
         _id: "26",
-        name: "Tomato Pasta",
+        name: "Swigato Pasta",
         image: food_26,
         price: 18,
         description: "Food provides essential nutrients for overall health and well-being",
@@ -348,3 +348,9 @@ export const food_list = [
         category: "Noodles"
     }
 ]
+
+export const food_list = raw_food_list.map((item) => ({
+    ...item,
+    price: item.price * 40,
+    id: item._id
+}))

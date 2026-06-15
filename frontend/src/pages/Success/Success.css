@@ -1,0 +1,43 @@
+.success-page {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.success-card {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  padding: 28px;
+  text-align: center;
+}
+
+.success-card h2 {
+  margin: 0 0 10px;
+  color: #1f2937;
+}
+
+.success-card p {
+  margin: 0 0 16px;
+  color: #6b7280;
+}
+
+.success-spinner {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto;
+  border: 3px solid #ffe1e1;
+  border-top-color: tomato;
+  border-radius: 50%;
+  animation: success-spin 0.75s linear infinite;
+}
+
+@keyframes success-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

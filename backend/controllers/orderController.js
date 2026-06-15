@@ -40,7 +40,7 @@ const placeOrder = async (req, res) => {
     }
     const line_items = items.map((item) => ({
       price_data: {
-        currency: "usd",
+        currency: "inr",
         product_data: {
           name: item.name,
         },
@@ -51,7 +51,7 @@ const placeOrder = async (req, res) => {
 
     line_items.push({
       price_data: {
-        currency: "usd",
+        currency: "inr",
         product_data: {
           name: "Delivery Charges",
         },
@@ -109,11 +109,30 @@ const verifyOrder = async (req, res) => {
       return res.json({ success: false, message: "Payment not completed" });
     }
 
+    // Verify session belongs to the requesting user
+    if (!session.metadata || session.metadata.userId !== userId) {
+      return res.json({ success: false, message: "Payment session ownership mismatch" });
+    }
+
+    // Verify payment amount matches the calculated order items total
+    const payloadItemsCents = orderPayload.items.reduce(
+      (sum, item) => sum + Math.round(Number(item.price) * 100) * (Number(item.quantity) || 1),
+      0
+    );
+    const expectedTotalCents = payloadItemsCents + 200; // items total + $2 delivery fee
+
+    if (session.amount_total !== expectedTotalCents) {
+      return res.json({
+        success: false,
+        message: "Payment amount mismatch with order items total",
+      });
+    }
+
     // Create new order
     const newOrder = new orderModel({
       userId,
       items: orderPayload.items,
-      amount: Number(orderPayload.amount) || 0,
+      amount: expectedTotalCents / 100, // normalized to dollars
       address: orderPayload.address || {},
       status: "Preparing",
       payment: true,

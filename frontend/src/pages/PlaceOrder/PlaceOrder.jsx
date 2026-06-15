@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./PlaceOrder.css";
 import { StoreContext } from "../../context/StoreContext";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 const PlaceOrder = () => {
-  const navigate= useNavigate();
+  const navigate = useNavigate();
 
-  const { getTotalCartAmount, token, food_list, cartItems, url } =
+  const { getTotalCartAmount, food_list, cartItems, url } =
     useContext(StoreContext);
   const [data, setData] = useState({
     firstName: "",
@@ -21,6 +21,7 @@ const PlaceOrder = () => {
     country: "",
     phone: "",
   });
+  const [paying, setPaying] = useState(false);
 
   const onChangeHandler = (event) => {
     const name = event.target.name;
@@ -30,39 +31,68 @@ const PlaceOrder = () => {
 
   const placeOrder = async (event) => {
     event.preventDefault();
-    let orderItems = [];
-    food_list.map((item) => {
-      if (cartItems[item._id] > 0) {
-        let itemInfo = item;
-        itemInfo["quantity"] = cartItems[item._id];
-        orderItems.push(itemInfo);
+    const authToken = localStorage.getItem("token");
+    if (!authToken) {
+      window.location.href = "/login";
+      return;
+    }
+    setPaying(true);
+    try {
+      const orderItems = food_list
+        .filter((item) => cartItems[item._id] > 0)
+        .map((item) => ({
+          ...item,
+          quantity: cartItems[item._id],
+        }));
+
+      if (orderItems.length === 0) {
+        navigate("/cart");
+        return;
       }
-    });
-    let orderData = {
-      address: data,
-      items: orderItems,
-      amount: getTotalCartAmount() + 2,
-    };
-    
-    let response= await axios.post(url+"/api/order/place",orderData,{headers:{token}});
-    if(response.data.success){
-      const {session_url}=response.data;
-      window.location.replace(session_url);
-    }else{
-      toast.error("Errors!")
+
+      const orderData = {
+        address: data,
+        items: orderItems,
+        amount: getTotalCartAmount() + 2,
+      };
+
+      localStorage.setItem(
+        "orderData",
+        JSON.stringify({
+          items: orderItems,
+          amount: orderData.amount,
+          address: data,
+        })
+      );
+
+      const response = await axios.post(
+        url + "/api/payment/create-session",
+        { items: orderItems },
+        {
+          headers: { token: authToken },
+        }
+      );
+
+      if (response.data.success && response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        toast.error(response.data.message || "Unable to start payment.");
+      }
+    } catch (error) {
+      console.error("Place order submission failed:", error);
+      toast.error("Could not proceed to payment. Please try again.");
+    } finally {
+      setPaying(false);
     }
   };
 
-  useEffect(()=>{
-    if(!token){
-      toast.error("Please Login first")
-      navigate("/cart")
+  useEffect(() => {
+    const authToken = localStorage.getItem("token");
+    if (!authToken) {
+      window.location.href = "/login";
     }
-    else if(getTotalCartAmount()===0){
-      toast.error("Please Add Items to Cart");
-      navigate("/cart")
-    }
-  },[token])
+  }, []);
+
   return (
     <form className="place-order" onSubmit={placeOrder}>
       <div className="place-order-left">
@@ -152,22 +182,24 @@ const PlaceOrder = () => {
           <div>
             <div className="cart-total-details">
               <p>Subtotals</p>
-              <p>${getTotalCartAmount()}</p>
+              <p>₹{getTotalCartAmount()}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>${getTotalCartAmount() === 0 ? 0 : 2}</p>
+              <p>₹{getTotalCartAmount() === 0 ? 0 : 2}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <b>Total</b>
               <b>
-                ${getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}
+                ₹{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}
               </b>
             </div>
           </div>
-          <button type="submit">PROCEED TO PAYMENT</button>
+          <button type="submit" disabled={paying}>
+            {paying ? "Redirecting to payment…" : "PROCEED TO PAYMENT"}
+          </button>
         </div>
       </div>
     </form>

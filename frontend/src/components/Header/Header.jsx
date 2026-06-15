@@ -2,6 +2,13 @@ import React from "react";
 import "./Header.css";
 
 const Header = () => {
+  const handleScrollToMenu = () => {
+    const element = document.getElementById("explore-menu");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="header">
       <div className="header-contents">
@@ -12,7 +19,7 @@ const Header = () => {
           mission is to satisfy your cravings and elevate your dining
           experience, one delicious meal at a time.
         </p>
-        <button>View Menu</button>
+        <button onClick={handleScrollToMenu}>View Menu</button>
       </div>
     </div>
   );

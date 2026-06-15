@@ -23,7 +23,7 @@ const StoreContextProvider = ({ children }) => {
   })();
   
   const [token, setToken] = useState(() => localStorage.getItem("token") || "");
-  const [food_list] = useState(staticFoodList);
+  const [food_list, setFoodList] = useState([]);
 
   useEffect(() => {
     axios.defaults.baseURL = url;
@@ -33,9 +33,12 @@ const StoreContextProvider = ({ children }) => {
     if (token) {
       axios.defaults.headers.common.token = token;
       localStorage.setItem("token", token);
-      return;
+      loadCartData(token);
+    } else {
+      delete axios.defaults.headers.common.token;
+      localStorage.removeItem("token");
+      setCartItems({});
     }
-    delete axios.defaults.headers.common.token;
   }, [token]);
 
   const addToCart = async (itemId) => {
@@ -97,6 +100,20 @@ const StoreContextProvider = ({ children }) => {
     return totalAmount;
   };
 
+  const fetchFoodList = async () => {
+    try {
+      const response = await axios.get(url + "/api/food/list");
+      if (response.data.success && response.data.data?.length > 0) {
+        setFoodList(response.data.data);
+      } else {
+        setFoodList(staticFoodList);
+      }
+    } catch (error) {
+      console.error("fetchFoodList error:", error);
+      setFoodList(staticFoodList);
+    }
+  };
+
   const loadCartData = async (authToken) => {
     try {
       const response = await axios.post(
@@ -112,10 +129,10 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     async function loadData() {
+      await fetchFoodList();
       const storedToken = localStorage.getItem("token");
       if (storedToken) {
         setToken(storedToken);
-        await loadCartData(storedToken);
       }
     }
     loadData();

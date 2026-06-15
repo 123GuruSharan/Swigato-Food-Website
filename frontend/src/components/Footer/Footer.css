@@ -35,6 +35,12 @@
 .footer-content-right h2 {
   color: white;
 }
+.footer-brand{
+  color: white;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+}
 
 .footer-social-icons img{
     width: 40px;

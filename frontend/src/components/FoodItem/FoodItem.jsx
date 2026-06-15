@@ -1,15 +1,24 @@
-import React, { useContext, useState } from "react";
+import { useContext } from "react";
 import "./FoodItem.css";
 import { assets } from "../../assets/frontend_assets/assets";
 import { StoreContext } from "../../context/StoreContext";
 
 const FoodItem = ({ id, name, price, description, image }) => {
-  const {cartItems,addToCart,removeFromCart,url}=useContext(StoreContext); 
+  const { cartItems, addToCart, removeFromCart, url } = useContext(StoreContext);
+
+  const imageSrc =
+    image &&
+    (image.startsWith("data:") ||
+      image.startsWith("http") ||
+      image.includes("/") ||
+      image.includes("\\"))
+      ? image
+      : `${url}/images/${image}`;
 
   return (
     <div className="food-item">
       <div className="food-item-img-container">
-        <img src={url+"/images/"+image} alt="" className="food-item-image" />
+        <img src={imageSrc || assets.logo} alt={name} className="food-item-image" />
         {!cartItems[id] ? (
           <img
             className="add"
@@ -31,7 +40,7 @@ const FoodItem = ({ id, name, price, description, image }) => {
           <img src={assets.rating_starts} alt="" />
         </div>
         <p className="food-item-desc">{description}</p>
-        <p className="food-item-price">${price}</p>
+        <p className="food-item-price">₹{price}</p>
       </div>
     </div>
   );
