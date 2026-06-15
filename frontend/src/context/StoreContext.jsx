@@ -103,8 +103,10 @@ const StoreContextProvider = ({ children }) => {
   const fetchFoodList = async () => {
     try {
       const response = await axios.get(url + "/api/food/list");
-      if (response.data.success && response.data.data?.length > 0) {
-        setFoodList(response.data.data);
+      if (response.data.success) {
+        const dbList = response.data.data || [];
+        // Prepend database items so new admin-added dishes appear at the top of the menu
+        setFoodList([...dbList, ...staticFoodList]);
       } else {
         setFoodList(staticFoodList);
       }
