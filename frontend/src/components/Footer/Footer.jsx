@@ -14,9 +14,15 @@ We offer a wide variety of cuisines crafted with quality ingredients to satisfy 
 Experience fast delivery, great taste, and convenience — all in one place.
           </p>
           <div className="footer-social-icons">
-            <img src={assets.facebook_icon} alt="" />
-            <img src={assets.twitter_icon} alt="" />
-            <img src={assets.linkedin_icon} alt="" />
+            <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer">
+              <img src={assets.facebook_icon} alt="Facebook" />
+            </a>
+            <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">
+              <img src={assets.twitter_icon} alt="Twitter" />
+            </a>
+            <a href="https://www.linkedin.com/in/guru-sharan/" target="_blank" rel="noopener noreferrer">
+              <img src={assets.linkedin_icon} alt="LinkedIn" />
+            </a>
           </div>
         </div>
         <div className="footer-content-center">
@@ -31,8 +37,8 @@ Experience fast delivery, great taste, and convenience — all in one place.
         <div className="footer-content-right">
           <h2>Get in touch</h2>
           <ul>
-            <li>+91 9876543210</li>
-            <li>contact@swigato.com</li>
+            <li>+91 8207629969</li>
+            <li>gurusharan4666@gmail.com</li>
           </ul>
         </div>
       </div>
