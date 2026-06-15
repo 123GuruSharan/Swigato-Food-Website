@@ -1,8 +1,16 @@
 {
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/"
+  "experimentalServices": {
+    "frontend": {
+      "entrypoint": "frontend",
+      "routePrefix": "/"
+    },
+    "backend": {
+      "entrypoint": "backend",
+      "routePrefix": "/api"
+    },
+    "admin": {
+      "entrypoint": "admin",
+      "routePrefix": "/admin"
     }
-  ]
+  }
 }
