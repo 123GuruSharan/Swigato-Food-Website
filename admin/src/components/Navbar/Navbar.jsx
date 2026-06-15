@@ -18,7 +18,10 @@ const Navbar = () => {
   }
   return (
     <div className="navbar">
-      <img className="logo" src={assets.logo} alt="" />
+      <div className="logo-container" onClick={() => navigate(token && admin ? "/add" : "/")} style={{ cursor: "pointer" }}>
+        <h1 className="logo-text" style={{ color: "tomato", fontSize: "30px", fontWeight: "bold", margin: 0, fontFamily: "Outfit, sans-serif" }}>Swigato.</h1>
+        <p className="admin-subtitle" style={{ fontSize: "12px", color: "#555", margin: 0, fontWeight: "500", fontFamily: "Outfit, sans-serif" }}>Admin Panel</p>
+      </div>
       {token && admin ? (
         <p className="login-conditon" onClick={logout}>Logout</p>
       ) : (
